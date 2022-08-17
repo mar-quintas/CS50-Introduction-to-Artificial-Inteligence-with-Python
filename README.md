@@ -1,2 +1,2 @@
-# CS50-Introduction-to-Artificial-Inteligence-with-Python
-Harvard's Introduction to Artificial Inteligence with Python on EDX platform
+# CS50's Introduction to Artificial Intelligence with Python
+Harvard's CS50's Introduction to Artificial Intelligence with Python with Python on EDX platform
