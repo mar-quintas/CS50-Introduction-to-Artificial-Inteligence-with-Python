@@ -1,7 +1,7 @@
 import csv
 import sys
 
-from util import Node, StackFrontier, QueueFrontier
+from util import Node, QueueFrontier
 
 # Maps names to a set of corresponding person_ids
 names = {}
@@ -90,19 +90,15 @@ def shortest_path(source, target):
 
     If no possible path, returns None.
     """
-
-    start_id = source
     num_explored = 0
 
-    start = Node(state=(0, start_id), parent=None)
+    start = Node(state=(0, source), parent=None)
     frontier = QueueFrontier()
     frontier.add(start)
 
     explored = set()
 
     while True:
-        import ipdb
-        ipdb.set_trace(context=10)
         if frontier.empty():
             return None
 
@@ -119,16 +115,14 @@ def shortest_path(source, target):
                     movie, person) not in explored:
                 child = Node(state=(movie, person), parent=node)
                 if child.state[1] == target:
-                    return return_path(node)
+                    return return_path(child)
                 frontier.add(child)
-                print(f"adding {person} to frontier")
 
 
 def return_path(node):
     result = []
     while node.parent is not None:
         result.append(node.state)
-        print("appending when target found")
         node = node.parent
     result.reverse()
     return result
