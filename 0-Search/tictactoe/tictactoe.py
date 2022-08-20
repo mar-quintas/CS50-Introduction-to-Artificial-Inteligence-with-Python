@@ -40,7 +40,14 @@ def actions(board):
     """
     Returns set of all possible actions (i, j) available on the board.
     """
-    raise NotImplementedError
+    if player(board) is None:
+        return
+    else:
+        actions = set()
+        for i in range(len(board)):
+            for j in range(len(board[i])):
+                if board[i][j] is EMPTY:
+                    actions.add((i, j))
 
 
 def result(board, action):
@@ -61,6 +68,8 @@ def terminal(board):
     """
     Returns True if game is over, False otherwise.
     """
+    if player(board) is None:
+        return True
     return False
 
 
