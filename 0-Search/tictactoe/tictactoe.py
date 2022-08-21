@@ -123,6 +123,8 @@ def terminal(board):
     """
     if player(board) is None:
         return True
+    if winner(board) is not None:
+        return True
     return False
 
 
