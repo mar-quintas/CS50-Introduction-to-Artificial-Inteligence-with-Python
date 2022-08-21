@@ -27,10 +27,10 @@ def player(board):
     count = dict(Counter(x for xs in board for x in set(xs)))
     if board == initial_state():
         return X
-    elif count["EMPTY"] == 0:
+    elif count.get(EMPTY, 0) == 0:
         return
     else:
-        if count["X"] == count["O"]:
+        if count.get(X, 0) == count.get(O, 0):
             return X
         else:
             return O
@@ -41,6 +41,7 @@ def actions(board):
     Returns set of all possible actions (i, j) available on the board.
     """
     if player(board) is None:
+        print("game over")
         return
     else:
         actions = set()
@@ -48,6 +49,7 @@ def actions(board):
             for j in range(len(board[i])):
                 if board[i][j] is EMPTY:
                     actions.add((i, j))
+        return actions
 
 
 def result(board, action):
@@ -132,11 +134,11 @@ def utility(board):
     """
     Returns 1 if X has won the game, -1 if O has won, 0 otherwise.
     """
-    winner_player = winner(board)
+    result = winner(board)
 
-    if winner_player == X:
+    if result == X:
         return 1
-    if winner_player == O:
+    if result == O:
         return -1
     return 0
 
