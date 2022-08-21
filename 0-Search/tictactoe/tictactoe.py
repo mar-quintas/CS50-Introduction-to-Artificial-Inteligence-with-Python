@@ -69,7 +69,52 @@ def winner(board):
     """
     Returns the winner of the game, if there is one.
     """
-    raise NotImplementedError
+    inverted = [[], [], []]
+    diagonals = [[], []]
+
+    for i in range(len(board)):
+        for j in range(len(board)):
+            if j == 0:
+                inverted[0].append(board[i][j])
+            if j == 1:
+                inverted[1].append(board[i][j])
+            if j == 2:
+                inverted[2].append(board[i][j])
+            if j == i:
+                diagonals[0].append(board[i][j])
+            if (i == 2 and j == 0) or (
+                    i == 1 and j == 1) or (i == 0 and j == 2):
+                diagonals[1].append(board[i][j])
+
+    rows = []
+    for list in inverted:
+        rows.append(list)
+    for list in diagonals:
+        rows.append(list)
+    for list in board:
+        rows.append(list)
+
+    return winner_from_rows(rows, board)
+
+
+def winner_from_rows(rows, board):
+    x_winns = False
+    o_winns = False
+
+    for i in range(len(rows)):
+        counter = dict(Counter(rows[i]))
+        if counter.get(X, 0) == len(board):
+            x_winns = True
+            break
+        if counter.get(O, 0) == len(board):
+            o_winns = True
+            break
+
+    if x_winns:
+        return X
+    if o_winns:
+        return O
+    return
 
 
 def terminal(board):
