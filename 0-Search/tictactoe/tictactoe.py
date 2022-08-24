@@ -2,9 +2,10 @@
 Tic Tac Toe Player
 """
 
-import math
 from collections import Counter
 import copy
+import itertools
+import random
 
 X = "X"
 O = "O"
@@ -24,13 +25,14 @@ def player(board):
     """
     Returns player who has the next turn on a board.
     """
-    count = dict(Counter(x for xs in board for x in set(xs)))
+    flat_board = list(itertools.chain.from_iterable(board))
+    count = dict(Counter(flat_board))
     if board == initial_state():
         return X
     elif count.get(EMPTY, 0) == 0:
         return
     else:
-        if count.get(X, 0) == count.get(O, 0):
+        if count.get(X, 0) <= count.get(O, 0):
             return X
         else:
             return O
@@ -41,7 +43,6 @@ def actions(board):
     Returns set of all possible actions (i, j) available on the board.
     """
     if player(board) is None:
-        print("game over")
         return
     else:
         actions = set()
@@ -143,8 +144,59 @@ def utility(board):
     return 0
 
 
+class Node():
+    def __init__(self, state, parent, action):
+        self.state = state
+        self.parent = parent
+        self.action = action
+
+
 def minimax(board):
     """
     Returns the optimal action for the current player on the board.
     """
-    raise NotImplementedError
+    available_actions = actions(board)
+    if board == initial_state():
+        return random.choice(list(available_actions))
+    possible_moves = []
+
+    for action in available_actions:
+        new_board = result(board, action)
+
+        if player(board) is X:
+            value = min_value(new_board)
+        if player(board) is O:
+            value = max_value(new_board)
+
+        move = Node(state=value, parent=board, action=action)
+        possible_moves.append(move)
+
+    chosen_move = possible_moves[0]
+
+    for move in possible_moves:
+        if player(board) is X:
+            if move.state > chosen_move.state:
+                chosen_move = move
+        if player(board) is O:
+            if move.state < chosen_move.state:
+                chosen_move = move
+
+    return chosen_move.action
+
+
+def max_value(board):
+    value = -2
+    if terminal(board):
+        return utility(board)
+    for action in actions(board):
+        value = max(value, min_value(result(board, action)))
+    return value
+
+
+def min_value(board):
+    if terminal(board):
+        return utility(board)
+    value = 2
+    for action in actions(board):
+        value = min(value, max_value(result(board, action)))
+    return value
